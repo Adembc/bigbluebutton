@@ -102,7 +102,7 @@ const SidebarNavigation = (props) => {
         height,
       }}
     >
-      {/* {<UserListContainer />} */}
+      {<UserListContainer />}
     </Resizable>
   );
 };
