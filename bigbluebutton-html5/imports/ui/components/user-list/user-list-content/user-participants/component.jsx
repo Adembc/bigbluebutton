@@ -191,12 +191,13 @@ class UserParticipants extends Component {
       isMeetingMuteOnStart,
     } = this.props;
     const { isOpen, scrollArea } = this.state;
-    console.log({ currentUser });
+    const isModerator = currentUser?.role === ROLE_MODERATOR;
+    console.log({ compact, isModerator });
     console.log({ ROLE_MODERATOR });
 
     return (
       <Styled.UserListColumn data-test="userList">
-        {!compact && currentUser?.role === ROLE_MODERATOR ? (
+        {!compact ? (
           <Styled.Container>
             <Styled.SmallTitle>
               {intl.formatMessage(intlMessages.usersTitle)}
@@ -216,6 +217,7 @@ class UserParticipants extends Component {
         ) : (
           <Styled.Separator />
         )}
+
         <Styled.VirtualizedScrollableList
           id={"user-list-virtualized-scroll"}
           aria-label="Users list"
