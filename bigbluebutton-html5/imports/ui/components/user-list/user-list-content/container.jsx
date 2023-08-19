@@ -18,14 +18,13 @@ const UserContentContainer = (props) => {
   const { isGuestLobbyMessageEnabled } = WaitingUsersService;
 
   return (
-    // <UserContent
-    //   {...{
-    //     isGuestLobbyMessageEnabled,
-    //     currentUser,
-    //     ...props,
-    //   }}
-    // />
-    <></>
+    <UserContent
+      {...{
+        isGuestLobbyMessageEnabled,
+        currentUser,
+        ...props,
+      }}
+    />
   );
 };
 
