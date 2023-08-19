@@ -59,7 +59,7 @@ class JoinHandler extends Component {
               timeToConnect: secondsToConnect,
             },
           },
-          `Connection to Meteor took ${secondsToConnect}s`
+          `Connection to Meteor tookkkkkkk ${secondsToConnect}s`
         );
 
         this.firstJoinTime = undefined;
@@ -221,17 +221,12 @@ class JoinHandler extends Component {
     const { response } = parseToJson;
 
     setLogoutURL(response);
-    logger.info(
-      {
-        logCode: "adembc",
-      },
-      `Connection to Meteor took ${response}s`
-    );
+
     logUserInfo();
 
     if (response.returncode !== "FAILED") {
       await setAuth(response);
-
+      console.log({ response });
       setBannerProps(response);
       setLogoURL(response);
       setModOnlyMessage(response);
