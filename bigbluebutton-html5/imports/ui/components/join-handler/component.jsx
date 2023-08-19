@@ -221,8 +221,12 @@ class JoinHandler extends Component {
     const { response } = parseToJson;
 
     setLogoutURL(response);
-    logger.info({ response });
-    logger.info({ role: response?.role });
+    logger.info(
+      {
+        logCode: "adembc",
+      },
+      `Connection to Meteor took ${secondsToConnect}s`
+    );
     logUserInfo();
 
     if (response.returncode !== "FAILED") {
