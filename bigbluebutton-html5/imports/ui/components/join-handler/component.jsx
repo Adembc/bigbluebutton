@@ -225,7 +225,7 @@ class JoinHandler extends Component {
       {
         logCode: "adembc",
       },
-      `Connection to Meteor took ${secondsToConnect}s`
+      `Connection to Meteor took ${response}s`
     );
     logUserInfo();
 
