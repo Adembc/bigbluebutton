@@ -221,8 +221,8 @@ class JoinHandler extends Component {
     const { response } = parseToJson;
 
     setLogoutURL(response);
-    console.log({ response });
-    console.log({ role: response?.role });
+    logger.info({ response });
+    logger.info({ role: response?.role });
     logUserInfo();
 
     if (response.returncode !== "FAILED") {
