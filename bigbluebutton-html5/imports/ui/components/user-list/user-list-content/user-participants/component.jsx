@@ -1,17 +1,13 @@
-import React, { Component } from 'react';
-import { defineMessages } from 'react-intl';
-import PropTypes from 'prop-types';
-import Styled from './styles';
-import { findDOMNode } from 'react-dom';
-import {
-  AutoSizer,
-  CellMeasurer,
-  CellMeasurerCache,
-} from 'react-virtualized';
-import UserListItemContainer from './user-list-item/container';
-import UserOptionsContainer from './user-options/container';
-import Settings from '/imports/ui/services/settings';
-import { injectIntl } from 'react-intl';
+import React, { Component } from "react";
+import { defineMessages } from "react-intl";
+import PropTypes from "prop-types";
+import Styled from "./styles";
+import { findDOMNode } from "react-dom";
+import { AutoSizer, CellMeasurer, CellMeasurerCache } from "react-virtualized";
+import UserListItemContainer from "./user-list-item/container";
+import UserOptionsContainer from "./user-options/container";
+import Settings from "/imports/ui/services/settings";
+import { injectIntl } from "react-intl";
 
 const propTypes = {
   compact: PropTypes.bool,
@@ -33,8 +29,8 @@ const defaultProps = {
 
 const intlMessages = defineMessages({
   usersTitle: {
-    id: 'app.userList.usersTitle',
-    description: 'Title for the Header',
+    id: "app.userList.usersTitle",
+    description: "Title for the Header",
   },
 });
 
@@ -67,22 +63,24 @@ class UserParticipants extends Component {
   }
 
   componentDidMount() {
-    document.getElementById('user-list-virtualized-scroll')?.getElementsByTagName('div')[0]?.firstElementChild?.setAttribute('aria-label', 'Users list');
+    document
+      .getElementById("user-list-virtualized-scroll")
+      ?.getElementsByTagName("div")[0]
+      ?.firstElementChild?.setAttribute("aria-label", "Users list");
 
     const { compact } = this.props;
     if (!compact) {
-      this.refScrollContainer.addEventListener(
-        'keydown',
-        this.rove,
-      );
+      this.refScrollContainer.addEventListener("keydown", this.rove);
 
       this.refScrollContainer.addEventListener(
-        'click',
-        this.handleClickSelectedUser,
+        "click",
+        this.handleClickSelectedUser
       );
     }
 
-    window.addEventListener('beforeunload', () => Session.set('dropdownOpenUserId', null));
+    window.addEventListener("beforeunload", () =>
+      Session.set("dropdownOpenUserId", null)
+    );
   }
 
   shouldComponentUpdate(nextProps) {
@@ -91,7 +89,7 @@ class UserParticipants extends Component {
 
   selectEl(el) {
     if (!el) return null;
-    if (el.getAttribute('tabindex')) return el?.focus();
+    if (el.getAttribute("tabindex")) return el?.focus();
     this.selectEl(el?.firstChild);
   }
 
@@ -107,20 +105,18 @@ class UserParticipants extends Component {
   }
 
   componentWillUnmount() {
-    this.refScrollContainer.removeEventListener('keydown', this.rove);
-    this.refScrollContainer.removeEventListener('click', this.handleClickSelectedUser);
+    this.refScrollContainer.removeEventListener("keydown", this.rove);
+    this.refScrollContainer.removeEventListener(
+      "click",
+      this.handleClickSelectedUser
+    );
   }
 
   getScrollContainerRef() {
     return this.refScrollContainer;
   }
 
-  rowRenderer({
-    index,
-    parent,
-    style,
-    key,
-  }) {
+  rowRenderer({ index, parent, style, key }) {
     const {
       compact,
       setEmojiStatus,
@@ -143,11 +139,7 @@ class UserParticipants extends Component {
         parent={parent}
         rowIndex={index}
       >
-        <span
-          style={style}
-          key={key}
-          id={`user-${user?.userId || ''}`}
-        >
+        <span style={style} key={key} id={`user-${user?.userId || ""}`}>
           <UserListItemContainer
             {...{
               compact,
@@ -171,7 +163,7 @@ class UserParticipants extends Component {
   handleClickSelectedUser(event) {
     let selectedUser = null;
     if (event.path) {
-      selectedUser = event.path.find(p => p.id && p.id.includes('user-'));
+      selectedUser = event.path.find((p) => p.id && p.id.includes("user-"));
     }
     this.setState({ selectedUser });
   }
@@ -199,35 +191,32 @@ class UserParticipants extends Component {
       isMeetingMuteOnStart,
     } = this.props;
     const { isOpen, scrollArea } = this.state;
-
+    console.log({ currentUser });
+    console.log({ ROLE_MODERATOR });
     return (
       <Styled.UserListColumn data-test="userList">
-        {
-          !compact
-            ? (
-              <Styled.Container>
-                <Styled.SmallTitle>
-                  {intl.formatMessage(intlMessages.usersTitle)}
-                  {users.length > 0 ? ` (${users.length})` : null}
-                </Styled.SmallTitle>
-                {currentUser?.role === ROLE_MODERATOR
-                  ? (
-                    <UserOptionsContainer {...{
-                      users,
-                      clearAllEmojiStatus,
-                      meetingIsBreakout,
-                      isMeetingMuteOnStart,
-                    }}
-                    />
-                  ) : null
-                }
-
-              </Styled.Container>
-            )
-            : <Styled.Separator />
-        }
+        {!compact ? (
+          <Styled.Container>
+            <Styled.SmallTitle>
+              {intl.formatMessage(intlMessages.usersTitle)}
+              {users.length > 0 ? ` (${users.length})` : null}
+            </Styled.SmallTitle>
+            {currentUser?.role === ROLE_MODERATOR ? (
+              <UserOptionsContainer
+                {...{
+                  users,
+                  clearAllEmojiStatus,
+                  meetingIsBreakout,
+                  isMeetingMuteOnStart,
+                }}
+              />
+            ) : null}
+          </Styled.Container>
+        ) : (
+          <Styled.Separator />
+        )}
         <Styled.VirtualizedScrollableList
-          id={'user-list-virtualized-scroll'}
+          id={"user-list-virtualized-scroll"}
           aria-label="Users list"
           role="region"
           tabIndex={0}
