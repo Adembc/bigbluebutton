@@ -4,8 +4,7 @@ import getFromUserSettings from "/imports/ui/services/users-settings";
 import Service from "/imports/ui/components/user-list/service";
 import UserList from "./component";
 
-const UserListContainer = (props) => <div />;
-// const UserListContainer = (props) => <UserList {...props} />;
+const UserListContainer = (props) => <UserList {...props} />;
 
 export default withTracker(({ compact }) => ({
   CustomLogoUrl: Service.getCustomLogoUrl(),
