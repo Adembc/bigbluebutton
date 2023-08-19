@@ -1,25 +1,23 @@
-import Screenshare from '/imports/api/screenshare';
-import KurentoBridge from '/imports/api/screenshare/client/bridge';
-import BridgeService from '/imports/api/screenshare/client/bridge/service';
-import Settings from '/imports/ui/services/settings';
-import logger from '/imports/startup/client/logger';
-import { stopWatching } from '/imports/ui/components/external-video-player/service';
-import Meetings from '/imports/api/meetings';
-import Auth from '/imports/ui/services/auth';
-import AudioService from '/imports/ui/components/audio/service';
+import Screenshare from "/imports/api/screenshare";
+import KurentoBridge from "/imports/api/screenshare/client/bridge";
+import BridgeService from "/imports/api/screenshare/client/bridge/service";
+import Settings from "/imports/ui/services/settings";
+import logger from "/imports/startup/client/logger";
+import { stopWatching } from "/imports/ui/components/external-video-player/service";
+import Meetings from "/imports/api/meetings";
+import Auth from "/imports/ui/services/auth";
+import AudioService from "/imports/ui/components/audio/service";
 import { Meteor } from "meteor/meteor";
-import MediaStreamUtils from '/imports/utils/media-stream-utils';
-import ConnectionStatusService from '/imports/ui/components/connection-status/service';
-import browserInfo from '/imports/utils/browserInfo';
-import NotesService from '/imports/ui/components/notes/service';
+import MediaStreamUtils from "/imports/utils/media-stream-utils";
+import ConnectionStatusService from "/imports/ui/components/connection-status/service";
+import browserInfo from "/imports/utils/browserInfo";
+import NotesService from "/imports/ui/components/notes/service";
 
-const VOLUME_CONTROL_ENABLED = Meteor.settings.public.kurento.screenshare.enableVolumeControl;
-const SCREENSHARE_MEDIA_ELEMENT_NAME = 'screenshareVideo';
+const VOLUME_CONTROL_ENABLED =
+  Meteor.settings.public.kurento.screenshare.enableVolumeControl;
+const SCREENSHARE_MEDIA_ELEMENT_NAME = "screenshareVideo";
 
-const DEFAULT_SCREENSHARE_STATS_TYPES = [
-  'outbound-rtp',
-  'inbound-rtp',
-];
+const DEFAULT_SCREENSHARE_STATS_TYPES = ["outbound-rtp", "inbound-rtp"];
 
 let _isSharingScreen = false;
 const _sharingScreenDep = {
@@ -40,26 +38,28 @@ const setSharingScreen = (isSharingScreen) => {
 };
 
 const _trackStreamTermination = (stream, handler) => {
-  if (typeof stream !== 'object' || typeof handler !== 'function') {
-    throw new TypeError('Invalid trackStreamTermination arguments');
+  if (typeof stream !== "object" || typeof handler !== "function") {
+    throw new TypeError("Invalid trackStreamTermination arguments");
   }
 
   if (stream.oninactive === null) {
-    stream.addEventListener('inactive', handler, { once: true });
+    stream.addEventListener("inactive", handler, { once: true });
   } else {
     const track = MediaStreamUtils.getVideoTracks(stream)[0];
     if (track) {
-      track.addEventListener('ended', handler, { once: true });
+      track.addEventListener("ended", handler, { once: true });
       track.onended = handler;
     }
   }
 };
 
 const _isStreamActive = (stream) => {
-  const tracksAreActive = !stream.getTracks().some(track => track.readyState === 'ended');
+  const tracksAreActive = !stream
+    .getTracks()
+    .some((track) => track.readyState === "ended");
 
   return tracksAreActive && stream.active;
-}
+};
 
 const _handleStreamTermination = () => {
   screenshareHasEnded();
@@ -69,20 +69,26 @@ const _handleStreamTermination = () => {
 // account for the presenter's local sharing state.
 // It reflects the GLOBAL screen sharing state (akka-apps)
 const isGloballyBroadcasting = () => {
-  const screenshareEntry = Screenshare.findOne({ meetingId: Auth.meetingID },
-    { fields: { 'screenshare.stream': 1 } });
+  const screenshareEntry = Screenshare.findOne(
+    { meetingId: Auth.meetingID },
+    { fields: { "screenshare.stream": 1 } }
+  );
 
-  return (!screenshareEntry ? false : !!screenshareEntry.screenshare.stream);
-}
+  return !screenshareEntry ? false : !!screenshareEntry.screenshare.stream;
+};
 
 // when the meeting information has been updated check to see if it was
 // screensharing. If it has changed either trigger a call to receive video
 // and display it, or end the call and hide the video
 const isVideoBroadcasting = () => {
   const sharing = isSharingScreen();
-  const screenshareEntry = Screenshare.findOne({ meetingId: Auth.meetingID },
-    { fields: { 'screenshare.stream': 1 } });
-  const screenIsShared = !screenshareEntry ? false : !!screenshareEntry.screenshare.stream;
+  const screenshareEntry = Screenshare.findOne(
+    { meetingId: Auth.meetingID },
+    { fields: { "screenshare.stream": 1 } }
+  );
+  const screenIsShared = !screenshareEntry
+    ? false
+    : !!screenshareEntry.screenshare.stream;
 
   if (screenIsShared && isSharingScreen) {
     setSharingScreen(false);
@@ -91,17 +97,18 @@ const isVideoBroadcasting = () => {
   return sharing || screenIsShared;
 };
 
-
 const screenshareHasAudio = () => {
-  const screenshareEntry = Screenshare.findOne({ meetingId: Auth.meetingID },
-    { fields: { 'screenshare.hasAudio': 1 } });
+  const screenshareEntry = Screenshare.findOne(
+    { meetingId: Auth.meetingID },
+    { fields: { "screenshare.hasAudio": 1 } }
+  );
 
   if (!screenshareEntry) {
     return false;
   }
 
   return !!screenshareEntry.screenshare.hasAudio;
-}
+};
 
 const screenshareHasEnded = () => {
   if (isSharingScreen()) {
@@ -113,7 +120,7 @@ const screenshareHasEnded = () => {
 
 const getMediaElement = () => {
   return document.getElementById(SCREENSHARE_MEDIA_ELEMENT_NAME);
-}
+};
 
 const getMediaElementDimensions = () => {
   const element = getMediaElement();
@@ -129,10 +136,11 @@ const setVolume = (volume) => {
 
 const getVolume = () => KurentoBridge.getVolume();
 
-const shouldEnableVolumeControl = () => VOLUME_CONTROL_ENABLED && screenshareHasAudio();
+const shouldEnableVolumeControl = () =>
+  VOLUME_CONTROL_ENABLED && screenshareHasAudio();
 
 const attachLocalPreviewStream = (mediaElement) => {
-  const {isTabletApp} = browserInfo;
+  const { isTabletApp } = browserInfo;
   if (isTabletApp) {
     // We don't show preview for mobile app, as the stream is only available in native code
     return;
@@ -142,7 +150,7 @@ const attachLocalPreviewStream = (mediaElement) => {
     // Always muted, presenter preview.
     BridgeService.screenshareLoadAndPlayMediaStream(stream, mediaElement, true);
   }
-}
+};
 
 const screenshareHasStarted = (isPresenter) => {
   // Presenter's screen preview is local, so skip
@@ -152,6 +160,8 @@ const screenshareHasStarted = (isPresenter) => {
 };
 
 const shareScreen = async (isPresenter, onFail) => {
+  console.log("here the popup should be visible");
+
   // stop external video share if running
   const meeting = Meetings.findOne({ meetingId: Auth.meetingID });
 
@@ -189,21 +199,27 @@ const shareScreen = async (isPresenter, onFail) => {
 const viewScreenshare = () => {
   const hasAudio = screenshareHasAudio();
   KurentoBridge.view(hasAudio).catch((error) => {
-    logger.error({
-      logCode: 'screenshare_view_failed',
-      extraInfo: {
-        errorName: error.name,
-        errorMessage: error.message,
+    logger.error(
+      {
+        logCode: "screenshare_view_failed",
+        extraInfo: {
+          errorName: error.name,
+          errorMessage: error.message,
+        },
       },
-    }, `Screenshare viewer failure`);
+      `Screenshare viewer failure`
+    );
   });
 };
 
-const screenShareEndAlert = () => AudioService
-  .playAlertSound(`${Meteor.settings.public.app.cdn
-    + Meteor.settings.public.app.basename
-    + Meteor.settings.public.app.instanceId}`
-    + '/resources/sounds/ScreenshareOff.mp3');
+const screenShareEndAlert = () =>
+  AudioService.playAlertSound(
+    `${
+      Meteor.settings.public.app.cdn +
+      Meteor.settings.public.app.basename +
+      Meteor.settings.public.app.instanceId
+    }` + "/resources/sounds/ScreenshareOff.mp3"
+  );
 
 const dataSavingSetting = () => Settings.dataSaving.viewScreenshare;
 
@@ -246,10 +262,12 @@ const getStats = async (statsTypes = DEFAULT_SCREENSHARE_STATS_TYPES) => {
 const isMediaFlowing = (previousStats, currentStats) => {
   const bpsData = ConnectionStatusService.calculateBitsPerSecond(
     currentStats?.screenshareStats,
-    previousStats?.screenshareStats,
+    previousStats?.screenshareStats
   );
-  const bpsDataAggr = Object.values(bpsData)
-    .reduce((sum, partialBpsData = 0) => sum + parseFloat(partialBpsData), 0);
+  const bpsDataAggr = Object.values(bpsData).reduce(
+    (sum, partialBpsData = 0) => sum + parseFloat(partialBpsData),
+    0
+  );
 
   return bpsDataAggr > 0;
 };
