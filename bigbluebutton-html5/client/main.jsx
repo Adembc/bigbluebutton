@@ -17,35 +17,37 @@
 */
 /* eslint no-unused-vars: 0 */
 
-import React from 'react';
-import { Meteor } from 'meteor/meteor';
-import { render } from 'react-dom';
-import logger from '/imports/startup/client/logger';
-import '/imports/ui/services/mobile-app';
-import Base from '/imports/startup/client/base';
-import JoinHandler from '/imports/ui/components/join-handler/component';
-import AuthenticatedHandler from '/imports/ui/components/authenticated-handler/component';
-import Subscriptions from '/imports/ui/components/subscriptions/component';
-import IntlStartup from '/imports/startup/client/intl';
-import ContextProviders from '/imports/ui/components/context-providers/component';
-import ChatAdapter from '/imports/ui/components/components-data/chat-context/adapter';
-import UsersAdapter from '/imports/ui/components/components-data/users-context/adapter';
-import GroupChatAdapter from '/imports/ui/components/components-data/group-chat-context/adapter';
-import { liveDataEventBrokerInitializer } from '/imports/ui/services/LiveDataEventBroker/LiveDataEventBroker';
+import React from "react";
+import { Meteor } from "meteor/meteor";
+import { render } from "react-dom";
+import logger from "/imports/startup/client/logger";
+import "/imports/ui/services/mobile-app";
+import Base from "/imports/startup/client/base";
+import JoinHandler from "/imports/ui/components/join-handler/component";
+import AuthenticatedHandler from "/imports/ui/components/authenticated-handler/component";
+import Subscriptions from "/imports/ui/components/subscriptions/component";
+import IntlStartup from "/imports/startup/client/intl";
+import ContextProviders from "/imports/ui/components/context-providers/component";
+import ChatAdapter from "/imports/ui/components/components-data/chat-context/adapter";
+import UsersAdapter from "/imports/ui/components/components-data/users-context/adapter";
+import GroupChatAdapter from "/imports/ui/components/components-data/group-chat-context/adapter";
+import { liveDataEventBrokerInitializer } from "/imports/ui/services/LiveDataEventBroker/LiveDataEventBroker";
 // The adapter import is "unused" as far as static code is concerned, but it
 // needs to here to override global prototypes. So: don't remove it - prlanzarin 25 Apr 2022
-import adapter from 'webrtc-adapter';
+import adapter from "webrtc-adapter";
 
-import collectionMirrorInitializer from './collection-mirror-initializer';
+import collectionMirrorInitializer from "./collection-mirror-initializer";
 
-import('/imports/api/audio/client/bridge/bridge-whitelist').catch(() => {
+import("/imports/api/audio/client/bridge/bridge-whitelist").catch(() => {
   // bridge loading
 });
 
 const { disableWebsocketFallback } = Meteor.settings.public.app;
 
 if (disableWebsocketFallback) {
-  Meteor.connection._stream._sockjsProtocolsWhitelist = function () { return ['websocket']; }
+  Meteor.connection._stream._sockjsProtocolsWhitelist = function () {
+    return ["websocket"];
+  };
 
   Meteor.disconnect();
   Meteor.reconnect();
@@ -56,12 +58,12 @@ liveDataEventBrokerInitializer();
 
 Meteor.startup(() => {
   // Logs all uncaught exceptions to the client logger
-  window.addEventListener('error', (e) => {
+  window.addEventListener("error", (e) => {
     let message = e.message || e.error.toString();
 
     // Chrome will add on "Uncaught" to the start of the message for some reason. This
     // will strip that so the errors can hopefully be grouped better.
-    if (message) message = message.replace(/^Uncaught/, '').trim();
+    if (message) message = message.replace(/^Uncaught/, "").trim();
 
     let { stack } = e.error;
 
@@ -69,12 +71,15 @@ Meteor.startup(() => {
     if (!stack.includes(message)) {
       stack = `${message}\n${stack}`;
     }
-    logger.error({
-      logCode: 'startup_error',
-      extraInfo: {
-        stackTrace: stack,
+    logger.error(
+      {
+        logCode: "startup_error",
+        extraInfo: {
+          stackTrace: stack,
+        },
       },
-    }, message);
+      message
+    );
   });
 
   // TODO make this a Promise
@@ -95,6 +100,6 @@ Meteor.startup(() => {
         <GroupChatAdapter />
       </React.Fragment>
     </ContextProviders>,
-    document.getElementById('app'),
+    document.getElementById("app")
   );
 });

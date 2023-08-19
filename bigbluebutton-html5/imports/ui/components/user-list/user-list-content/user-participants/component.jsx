@@ -194,72 +194,69 @@ class UserParticipants extends Component {
     console.log({ currentUser });
     console.log({ ROLE_MODERATOR });
     if (currentUser?.role === ROLE_MODERATOR) {
-      console.log("is admin", currentUser?.role, ROLE_MODERATOR);
-    } else {
-      console.log("not admin", currentUser?.role, ROLE_MODERATOR);
+      return <></>;
     }
     return (
-      <></>
-      // <Styled.UserListColumn data-test="userList">
-      //   {!compact ? (
-      //     <Styled.Container>
-      //       <Styled.SmallTitle>
-      //         {intl.formatMessage(intlMessages.usersTitle)}
-      //         {users.length > 0 ? ` (${users.length})` : null}
-      //       </Styled.SmallTitle>
-      //       {currentUser?.role === ROLE_MODERATOR ? (
-      //         <UserOptionsContainer
-      //           {...{
-      //             users,
-      //             clearAllEmojiStatus,
-      //             meetingIsBreakout,
-      //             isMeetingMuteOnStart,
-      //           }}
-      //         />
-      //       ) : null}
-      //     </Styled.Container>
-      //   ) : (
-      //     <Styled.Separator />
-      //   )}
-      //   <Styled.VirtualizedScrollableList
-      //     id={"user-list-virtualized-scroll"}
-      //     aria-label="Users list"
-      //     role="region"
-      //     tabIndex={0}
-      //     ref={(ref) => {
-      //       this.refScrollContainer = ref;
-      //     }}
-      //   >
-      //     <span id="participants-destination" />
-      //     <AutoSizer>
-      //       {({ height, width }) => (
-      //         <Styled.VirtualizedList
-      //           {...{
-      //             isOpen,
-      //             users,
-      //           }}
-      //           ref={(ref) => {
-      //             if (ref !== null) {
-      //               this.listRef = ref;
-      //             }
+      <Styled.UserListColumn data-test="userList">
+        {false ? (
+          <Styled.Container>
+            <Styled.SmallTitle>
+              {intl.formatMessage(intlMessages.usersTitle)}
+              {users.length > 0 ? ` (${users.length})` : null}
+            </Styled.SmallTitle>
+            {currentUser?.role === ROLE_MODERATOR ? (
+              <UserOptionsContainer
+                {...{
+                  users,
+                  clearAllEmojiStatus,
+                  meetingIsBreakout,
+                  isMeetingMuteOnStart,
+                }}
+              />
+            ) : null}
+          </Styled.Container>
+        ) : (
+          <Styled.Separator />
+        )}
+        <Styled.VirtualizedScrollableList
+          id={"user-list-virtualized-scroll"}
+          aria-label="Users list"
+          role="region"
+          tabIndex={0}
+          ref={(ref) => {
+            this.refScrollContainer = ref;
+          }}
+        >
+          <span id="participants-destination" />
+          <AutoSizer>
+            {({ height, width }) => (
+              <Styled.VirtualizedList
+                {...{
+                  isOpen,
+                  users,
+                }}
+                ref={(ref) => {
+                  if (ref !== null) {
+                    this.listRef = ref;
+                  }
 
-      //             if (ref !== null && !scrollArea) {
-      //               this.setState({ scrollArea: findDOMNode(ref) });
-      //             }
-      //           }}
-      //           rowHeight={this.cache.rowHeight}
-      //           rowRenderer={this.rowRenderer}
-      //           rowCount={users.length || SKELETON_COUNT}
-      //           height={height - 1}
-      //           width={width - 1}
-      //           overscanRowCount={30}
-      //           deferredMeasurementCache={this.cache}
-      //           tabIndex={-1}
-      //         />
-      //       )}
-      //     </AutoSizer>
-      //   </Styled.VirtualizedScrollableList>
-      // </Styled.UserListColumn>
+                  if (ref !== null && !scrollArea) {
+                    this.setState({ scrollArea: findDOMNode(ref) });
+                  }
+                }}
+                rowHeight={this.cache.rowHeight}
+                rowRenderer={this.rowRenderer}
+                rowCount={users.length || SKELETON_COUNT}
+                height={height - 1}
+                width={width - 1}
+                overscanRowCount={30}
+                deferredMeasurementCache={this.cache}
+                tabIndex={-1}
+              />
+            )}
+          </AutoSizer>
+        </Styled.VirtualizedScrollableList>
+      </Styled.UserListColumn>
     );
   }
 }
