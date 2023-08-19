@@ -24,7 +24,7 @@ class UserList extends PureComponent {
         {showBranding && !compact && CustomLogoUrl ? (
           <CustomLogo CustomLogoUrl={CustomLogoUrl} />
         ) : null}
-        <UserContentContainer compact={compact} />
+        {/* <UserContentContainer compact={compact} /> */}
       </Styled.UserList>
     );
   }
