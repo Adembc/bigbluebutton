@@ -226,7 +226,6 @@ class JoinHandler extends Component {
 
     if (response.returncode !== "FAILED") {
       await setAuth(response);
-      console.log({ response });
       setBannerProps(response);
       setLogoURL(response);
       setModOnlyMessage(response);
