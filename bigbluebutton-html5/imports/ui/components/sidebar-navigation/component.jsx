@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
-import Resizable from 're-resizable';
-import { ACTIONS } from '../layout/enums';
-import UserListContainer from '../user-list/container';
+import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
+import Resizable from "re-resizable";
+import { ACTIONS } from "../layout/enums";
+import UserListContainer from "../user-list/container";
 
 const propTypes = {
   top: PropTypes.number.isRequired,
@@ -46,8 +46,7 @@ const SidebarNavigation = (props) => {
     if (!isResizing) setResizableWidth(width);
   }, [width]);
 
-  useEffect(() => {
-  }, [resizeStartWidth]);
+  useEffect(() => {}, [resizeStartWidth]);
 
   const setSidebarNavWidth = (dWidth) => {
     const newWidth = resizeStartWidth + dWidth;
@@ -80,7 +79,7 @@ const SidebarNavigation = (props) => {
       }}
       handleStyles={{
         right: {
-          right: '-8px',
+          right: "-8px",
         },
       }}
       handleWrapperClass="resizeSidebarNavWrapper"
@@ -94,7 +93,7 @@ const SidebarNavigation = (props) => {
         setResizeStartWidth(0);
       }}
       style={{
-        position: 'absolute',
+        position: "absolute",
         top,
         left,
         right,
@@ -103,7 +102,7 @@ const SidebarNavigation = (props) => {
         height,
       }}
     >
-      <UserListContainer />
+      {/* <UserListContainer /> */}
     </Resizable>
   );
 };
