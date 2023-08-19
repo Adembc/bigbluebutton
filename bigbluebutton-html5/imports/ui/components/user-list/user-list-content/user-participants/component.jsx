@@ -193,6 +193,9 @@ class UserParticipants extends Component {
     const { isOpen, scrollArea } = this.state;
     console.log({ currentUser });
     console.log({ ROLE_MODERATOR });
+    if (currentUser?.role === ROLE_MODERATOR) {
+      return <></>;
+    }
     return (
       <Styled.UserListColumn data-test="userList">
         {!compact ? (
