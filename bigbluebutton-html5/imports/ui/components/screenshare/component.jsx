@@ -90,7 +90,6 @@ class ScreenshareComponent extends React.Component {
       switched: false,
       // Volume control hover toolbar
       showHoverToolBar: false,
-      showPopup: true,
     };
 
     this.onLoadedData = this.onLoadedData.bind(this);
@@ -115,13 +114,6 @@ class ScreenshareComponent extends React.Component {
   }
 
   componentDidMount() {
-    // Stream health state tracker to propagate UI changes on reconnections
-    subscribeToStreamStateChange("screenshare", this.onStreamStateChange);
-    // Attaches the local stream if it exists to serve as the local presenter preview
-    attachLocalPreviewStream(getMediaElement());
-  }
-
-  componentDidUpdate(prevProps, prevState) {
     const {
       isLayoutSwapped,
       layoutContextDispatch,
@@ -129,38 +121,40 @@ class ScreenshareComponent extends React.Component {
       isPresenter,
       isSharedNotesPinned,
     } = this.props;
-    // const { showPopup: prevShowPopup } = prevProps;
-    const { showPopup } = this.state;
 
-    if (prevState?.showPopup && !showPopup) {
-      console.log("should be sharing now");
-      //this should be blocked until the popup closed
-      screenshareHasStarted(isPresenter);
-      // Autoplay failure handling
-      window.addEventListener(
-        "screensharePlayFailed",
-        this.handlePlayElementFailed
-      );
+    screenshareHasStarted(isPresenter);
+    // Autoplay failure handling
+    window.addEventListener(
+      "screensharePlayFailed",
+      this.handlePlayElementFailed
+    );
+    // Stream health state tracker to propagate UI changes on reconnections
+    subscribeToStreamStateChange("screenshare", this.onStreamStateChange);
+    // Attaches the local stream if it exists to serve as the local presenter preview
+    attachLocalPreviewStream(getMediaElement());
 
-      notify(
-        intl.formatMessage(intlMessages.screenshareStarted),
-        "info",
-        "desktop"
-      );
+    notify(
+      intl.formatMessage(intlMessages.screenshareStarted),
+      "info",
+      "desktop"
+    );
 
+    layoutContextDispatch({
+      type: ACTIONS.SET_HAS_SCREEN_SHARE,
+      value: true,
+    });
+
+    if (isLayoutSwapped) {
       layoutContextDispatch({
-        type: ACTIONS.SET_HAS_SCREEN_SHARE,
+        type: ACTIONS.SET_PRESENTATION_IS_OPEN,
         value: true,
       });
-
-      if (isLayoutSwapped) {
-        layoutContextDispatch({
-          type: ACTIONS.SET_PRESENTATION_IS_OPEN,
-          value: true,
-        });
-      }
-      Session.set("pinnedNotesLastState", isSharedNotesPinned);
     }
+    Session.set("pinnedNotesLastState", isSharedNotesPinned);
+  }
+
+  componentDidUpdate(prevProps) {
+    const { isPresenter } = this.props;
     if (prevProps.isPresenter && !isPresenter) {
       screenshareHasEnded();
     }
@@ -506,9 +500,9 @@ class ScreenshareComponent extends React.Component {
   }
 
   renderScreensharePresenter() {
-    const { switched, showPopup } = this.state;
+    const { switched } = this.state;
     const { isGloballyBroadcasting, intl } = this.props;
-    console.log({ showPopup });
+
     return (
       <Styled.ScreenshareContainer
         switched={switched}
@@ -517,7 +511,6 @@ class ScreenshareComponent extends React.Component {
           this.screenshareContainer = ref;
         }}
       >
-        {showPopup && this.renderScreenSharePopup()}
         {isGloballyBroadcasting && this.renderSwitchButton()}
         {this.renderVideo(switched)}
 
@@ -564,36 +557,6 @@ class ScreenshareComponent extends React.Component {
       </Styled.ScreenshareContainer>
     );
   }
-  renderScreenSharePopup() {
-    const popupOverlayStyle = {
-      position: "fixed",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      backgroundColor: "rgba(0, 0, 0, 0.7)" /* Black overlay with opacity */,
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      zIndex: 10000000 /* Adjust the z-index as needed */,
-    };
-
-    const popupContentStyle = {
-      backgroundColor: "black",
-      padding: "20px",
-      borderRadius: "5px",
-      boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
-    };
-
-    return (
-      <div style={popupOverlayStyle}>
-        <div style={popupContentStyle}>popup select screeen</div>
-        <button onClick={() => this.setState({ showPopup: false })}>
-          test
-        </button>
-      </div>
-    );
-  }
 
   render() {
     const { loaded, autoplayBlocked, mediaFlowing } = this.state;
@@ -615,9 +578,10 @@ class ScreenshareComponent extends React.Component {
     // 2 - The user is a presenter and the stream wasn't globally broadcasted yet
     // 3 - The media was loaded, the stream was globally broadcasted BUT the stream
     // state transitioned to an unhealthy stream. tl;dr: screen sharing reconnection
-    console.log({ loaded, isPresenter, isGloballyBroadcasting, mediaFlowing });
     const shouldRenderConnectingState =
-      !loaded || (isPresenter && !isGloballyBroadcasting);
+      !loaded ||
+      (isPresenter && !isGloballyBroadcasting) ||
+      (!mediaFlowing && loaded && isGloballyBroadcasting);
 
     const display = width > 0 && height > 0 ? "inherit" : "none";
     const { animations } = Settings.application;
