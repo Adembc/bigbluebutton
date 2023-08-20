@@ -624,9 +624,7 @@ class ScreenshareComponent extends React.Component {
     // state transitioned to an unhealthy stream. tl;dr: screen sharing reconnection
     console.log({ loaded, isPresenter, isGloballyBroadcasting, mediaFlowing });
     const shouldRenderConnectingState =
-      !loaded ||
-      (isPresenter && !isGloballyBroadcasting) ||
-      (!mediaFlowing && loaded && isGloballyBroadcasting);
+      !loaded || (isPresenter && !isGloballyBroadcasting);
 
     const display = width > 0 && height > 0 ? "inherit" : "none";
     const { animations } = Settings.application;
