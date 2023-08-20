@@ -158,6 +158,12 @@ const screenshareHasStarted = (isPresenter) => {
     viewScreenshare();
   }
 };
+const screenshareSelected = (isPresenter) => {
+  // Presenter's screen preview is local, so skip
+  if (!isPresenter) {
+    viewScreenshare();
+  }
+};
 
 const shareScreen = async (isPresenter, onFail) => {
   // stop external video share if running
@@ -188,8 +194,10 @@ const shareScreen = async (isPresenter, onFail) => {
 
     // Close Shared Notes if open.
     NotesService.pinSharedNotes(false);
-
-    setSharingScreen(true);
+    console.log({ isPresenter }, "from both");
+    if (isPresenter) {
+      setSharingScreen(true);
+    }
   } catch (error) {
     onFail(error);
   }
