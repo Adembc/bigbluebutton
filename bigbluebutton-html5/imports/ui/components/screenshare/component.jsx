@@ -123,22 +123,22 @@ class ScreenshareComponent extends React.Component {
       isSharedNotesPinned,
     } = this.props;
     this.setState({ showPopup: true });
-    screenshareHasStarted(isPresenter);
+    // screenshareHasStarted(isPresenter);
     // Autoplay failure handling
     window.addEventListener(
       "screensharePlayFailed",
       this.handlePlayElementFailed
     );
     // Stream health state tracker to propagate UI changes on reconnections
-    subscribeToStreamStateChange("screenshare", this.onStreamStateChange);
-    // Attaches the local stream if it exists to serve as the local presenter preview
-    attachLocalPreviewStream(getMediaElement());
+    // subscribeToStreamStateChange("screenshare", this.onStreamStateChange);
+    // // Attaches the local stream if it exists to serve as the local presenter preview
+    // attachLocalPreviewStream(getMediaElement());
 
-    // notify(
-    //   intl.formatMessage(intlMessages.screenshareStarted),
-    //   "info",
-    //   "desktop"
-    // );
+    notify(
+      intl.formatMessage(intlMessages.screenshareStarted),
+      "info",
+      "desktop"
+    );
 
     layoutContextDispatch({
       type: ACTIONS.SET_HAS_SCREEN_SHARE,
