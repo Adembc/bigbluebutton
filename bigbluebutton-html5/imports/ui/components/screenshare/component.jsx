@@ -125,7 +125,13 @@ class ScreenshareComponent extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-    const { isPresenter } = this.props;
+    const {
+      isLayoutSwapped,
+      layoutContextDispatch,
+      intl,
+      isPresenter,
+      isSharedNotesPinned,
+    } = this.props;
     // const { showPopup: prevShowPopup } = prevProps;
     const { showPopup } = this.state;
 
