@@ -13,6 +13,7 @@ import { UsersContext } from "/imports/ui/components/components-data/users-conte
 import { shouldEnableVolumeControl } from "./service";
 import MediaService from "/imports/ui/components/media/service";
 import NotesService from "/imports/ui/components/notes/service";
+import Overlay from "./Overlay";
 
 const ScreenshareContainer = (props) => {
   const screenShare = layoutSelectOutput((i) => i.screenShare);
@@ -30,16 +31,17 @@ const ScreenshareContainer = (props) => {
 
   if (isVideoBroadcasting()) {
     return (
-      <ScreenshareComponent
-        {...{
-          layoutContextDispatch,
-          ...props,
-          ...screenShare,
-          fullscreenContext,
-          fullscreenElementId,
-          isPresenter,
-        }}
-      />
+      <Overlay isOpen={true} />
+      // <ScreenshareComponent
+      //   {...{
+      //     layoutContextDispatch,
+      //     ...props,
+      //     ...screenShare,
+      //     fullscreenContext,
+      //     fullscreenElementId,
+      //     isPresenter,
+      //   }}
+      // />
     );
   }
   return null;
