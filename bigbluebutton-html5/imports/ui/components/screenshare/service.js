@@ -148,8 +148,7 @@ const attachLocalPreviewStream = (mediaElement) => {
   const stream = KurentoBridge.gdmStream;
   if (stream && mediaElement) {
     // Always muted, presenter preview.
-    //BridgeService.screenshareLoadAndPlayMediaStream(stream, mediaElement, true);
-    console.log("remove screen");
+    BridgeService.screenshareLoadAndPlayMediaStream(stream, mediaElement, true);
   }
 };
 

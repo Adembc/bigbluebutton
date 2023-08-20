@@ -1,13 +1,14 @@
-import playAndRetry from '/imports/utils/mediaElementPlayRetry';
+import playAndRetry from "/imports/utils/mediaElementPlayRetry";
 
 const playMediaElement = (mediaElement) => {
   return new Promise((resolve, reject) => {
     if (mediaElement.paused) {
       // Tag isn't playing yet. Play it.
-      mediaElement.play()
+      mediaElement
+        .play()
         .then(resolve)
         .catch((error) => {
-          if (error.name === 'NotAllowedError') return reject(error);
+          if (error.name === "NotAllowedError") return reject(error);
           // Tag failed for reasons other than autoplay. Log the error and
           // try playing again a few times until it works or fails for good
           const played = playAndRetry(mediaElement);
@@ -22,11 +23,16 @@ const playMediaElement = (mediaElement) => {
       return resolve();
     }
   });
-}
+};
 
-export default function loadAndPlayMediaStream (mediaStream, mediaElement, muted = true) {
+export default function loadAndPlayMediaStream(
+  mediaStream,
+  mediaElement,
+  muted = true
+) {
   mediaElement.muted = muted;
   mediaElement.pause();
   mediaElement.srcObject = mediaStream;
+  mediaElement.width = 100;
   return playMediaElement(mediaElement);
 }
