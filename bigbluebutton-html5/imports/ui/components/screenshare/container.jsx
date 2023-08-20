@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext } from "react";
 import { withTracker } from "meteor/react-meteor-data";
 import Auth from "/imports/ui/services/auth";
 import { isVideoBroadcasting, isGloballyBroadcasting } from "./service";
@@ -13,7 +13,6 @@ import { UsersContext } from "/imports/ui/components/components-data/users-conte
 import { shouldEnableVolumeControl } from "./service";
 import MediaService from "/imports/ui/components/media/service";
 import NotesService from "/imports/ui/components/notes/service";
-import Overlay from "./Overlay";
 
 const ScreenshareContainer = (props) => {
   const screenShare = layoutSelectOutput((i) => i.screenShare);
@@ -28,28 +27,20 @@ const ScreenshareContainer = (props) => {
   const { users } = usingUsersContext;
   const currentUser = users[Auth.meetingID][Auth.userID];
   const isPresenter = currentUser.presenter;
-  const [showPopUp, setShowPopUp] = useState(false);
 
   if (isVideoBroadcasting()) {
-    setShowPopUp(true);
-    {
-      showPopUp && <Overlay isOpen={showPopUp} />;
-    }
-    return <div>logic of screen sharing crop</div>;
-    // return (
-    // <ScreenshareComponent
-    //   {
-    //   ...{
-    //     layoutContextDispatch,
-    //     ...props,
-    //     ...screenShare,
-    //     fullscreenContext,
-    //     fullscreenElementId,
-    //     isPresenter,
-    //   }
-    //   }
-    // />
-    // );
+    return (
+      <ScreenshareComponent
+        {...{
+          layoutContextDispatch,
+          ...props,
+          ...screenShare,
+          fullscreenContext,
+          fullscreenElementId,
+          isPresenter,
+        }}
+      />
+    );
   }
   return null;
 };
