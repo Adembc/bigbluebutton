@@ -28,7 +28,7 @@ const ScreenshareContainer = (props) => {
   const currentUser = users[Auth.meetingID][Auth.userID];
   const isPresenter = currentUser.presenter;
 
-  if (isVideoBroadcasting() && !isPresenter) {
+  if (isVideoBroadcasting()) {
     return (
       <ScreenshareComponent
         {...{
