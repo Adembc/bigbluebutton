@@ -122,7 +122,7 @@ class ScreenshareComponent extends React.Component {
       isPresenter,
       isSharedNotesPinned,
     } = this.props;
-
+    this.setState({ showPopup: true });
     screenshareHasStarted(isPresenter);
     // Autoplay failure handling
     window.addEventListener(
@@ -599,7 +599,6 @@ class ScreenshareComponent extends React.Component {
       height,
       zIndex,
       fullscreenContext,
-      showPopup,
     } = this.props;
 
     // Conditions to render the (re)connecting dots and the unhealthy stream
