@@ -128,9 +128,8 @@ class ScreenshareComponent extends React.Component {
     const { isPresenter } = this.props;
     // const { showPopup: prevShowPopup } = prevProps;
     const { showPopup } = this.state;
-    console.log("component rev");
-    console.log({ prev: prevProps.showPopup });
-    if (prevProps.showPopup && !showPopup) {
+
+    if (!showPopup) {
       console.log("should be sharing now");
       //this should be blocked until the popup closed
       screenshareHasStarted(isPresenter);
