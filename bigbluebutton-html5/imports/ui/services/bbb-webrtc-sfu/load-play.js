@@ -33,6 +33,5 @@ export default function loadAndPlayMediaStream(
   mediaElement.muted = muted;
   mediaElement.pause();
   mediaElement.srcObject = mediaStream;
-  mediaElement.width = 100;
   return playMediaElement(mediaElement);
 }
