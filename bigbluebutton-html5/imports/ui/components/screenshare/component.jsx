@@ -86,7 +86,7 @@ class ScreenshareComponent extends React.Component {
     this.state = {
       loaded: false,
       autoplayBlocked: false,
-      mediaFlowing: true,
+      mediaFlowing: false,
       switched: false,
       // Volume control hover toolbar
       showHoverToolBar: false,
