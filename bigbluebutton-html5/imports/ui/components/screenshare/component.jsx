@@ -124,7 +124,8 @@ class ScreenshareComponent extends React.Component {
     // } = this.props;
   }
 
-  componentDidUpdate(prevProps) {
+  componentDidUpdate(prevProps, prevState) {
+    console.log({ prevState });
     const { isPresenter } = this.props;
     // const { showPopup: prevShowPopup } = prevProps;
     const { showPopup } = this.state;
@@ -143,11 +144,11 @@ class ScreenshareComponent extends React.Component {
       // Attaches the local stream if it exists to serve as the local presenter preview
       attachLocalPreviewStream(getMediaElement());
 
-      // notify(
-      //   intl.formatMessage(intlMessages.screenshareStarted),
-      //   "info",
-      //   "desktop"
-      // );
+      notify(
+        intl.formatMessage(intlMessages.screenshareStarted),
+        "info",
+        "desktop"
+      );
 
       layoutContextDispatch({
         type: ACTIONS.SET_HAS_SCREEN_SHARE,
