@@ -90,7 +90,7 @@ class ScreenshareComponent extends React.Component {
       switched: false,
       // Volume control hover toolbar
       showHoverToolBar: false,
-      showPopup: false,
+      showPopup: true,
     };
 
     this.onLoadedData = this.onLoadedData.bind(this);
@@ -122,40 +122,43 @@ class ScreenshareComponent extends React.Component {
       isPresenter,
       isSharedNotesPinned,
     } = this.props;
-    this.setState({ showPopup: true });
-    // screenshareHasStarted(isPresenter);
-    // Autoplay failure handling
-    window.addEventListener(
-      "screensharePlayFailed",
-      this.handlePlayElementFailed
-    );
-    // Stream health state tracker to propagate UI changes on reconnections
-    // subscribeToStreamStateChange("screenshare", this.onStreamStateChange);
-    // // Attaches the local stream if it exists to serve as the local presenter preview
-    // attachLocalPreviewStream(getMediaElement());
-
-    notify(
-      intl.formatMessage(intlMessages.screenshareStarted),
-      "info",
-      "desktop"
-    );
-
-    layoutContextDispatch({
-      type: ACTIONS.SET_HAS_SCREEN_SHARE,
-      value: true,
-    });
-
-    if (isLayoutSwapped) {
-      layoutContextDispatch({
-        type: ACTIONS.SET_PRESENTATION_IS_OPEN,
-        value: true,
-      });
-    }
-    Session.set("pinnedNotesLastState", isSharedNotesPinned);
+    // this.setState({ showPopup: true });
   }
 
   componentDidUpdate(prevProps) {
-    const { isPresenter } = this.props;
+    const { isPresenter, showPopup } = this.props;
+    if (!showPopup) {
+      //this should be blocked until the popup closed
+      screenshareHasStarted(isPresenter);
+      // Autoplay failure handling
+      window.addEventListener(
+        "screensharePlayFailed",
+        this.handlePlayElementFailed
+      );
+      // Stream health state tracker to propagate UI changes on reconnections
+      subscribeToStreamStateChange("screenshare", this.onStreamStateChange);
+      // Attaches the local stream if it exists to serve as the local presenter preview
+      attachLocalPreviewStream(getMediaElement());
+
+      notify(
+        intl.formatMessage(intlMessages.screenshareStarted),
+        "info",
+        "desktop"
+      );
+
+      layoutContextDispatch({
+        type: ACTIONS.SET_HAS_SCREEN_SHARE,
+        value: true,
+      });
+
+      if (isLayoutSwapped) {
+        layoutContextDispatch({
+          type: ACTIONS.SET_PRESENTATION_IS_OPEN,
+          value: true,
+        });
+      }
+      Session.set("pinnedNotesLastState", isSharedNotesPinned);
+    }
     if (prevProps.isPresenter && !isPresenter) {
       screenshareHasEnded();
     }
@@ -574,7 +577,7 @@ class ScreenshareComponent extends React.Component {
     };
 
     const popupContentStyle = {
-      backgroundColor: "black",
+      backgroundColor: "white",
       padding: "20px",
       borderRadius: "5px",
       boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
@@ -583,6 +586,9 @@ class ScreenshareComponent extends React.Component {
     return (
       <div style={popupOverlayStyle}>
         <div style={popupContentStyle}>popup select screeen</div>
+        <button onClick={() => this.setState({ showPopup: false })}>
+          close
+        </button>
       </div>
     );
   }
