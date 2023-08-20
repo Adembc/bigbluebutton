@@ -521,7 +521,7 @@ class ScreenshareComponent extends React.Component {
         {isGloballyBroadcasting && this.renderSwitchButton()}
         {this.renderVideo(switched)}
 
-        {isGloballyBroadcasting ? (
+        {/* {isGloballyBroadcasting ? (
           <div data-test="isSharingScreen">
             {!switched &&
               ScreenshareComponent.renderScreenshareContainerInside(
@@ -532,7 +532,7 @@ class ScreenshareComponent extends React.Component {
           ScreenshareComponent.renderScreenshareContainerInside(
             intl.formatMessage(intlMessages.presenterLoadingLabel)
           )
-        )}
+        )} */}
       </Styled.ScreenshareContainer>
     );
   }
