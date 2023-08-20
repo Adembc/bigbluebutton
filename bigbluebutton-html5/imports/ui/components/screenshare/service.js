@@ -194,10 +194,8 @@ const shareScreen = async (isPresenter, onFail) => {
 
     // Close Shared Notes if open.
     NotesService.pinSharedNotes(false);
-    console.log({ isPresenter }, "from both");
-    if (isPresenter) {
-      setSharingScreen(true);
-    }
+
+    setSharingScreen(true);
   } catch (error) {
     onFail(error);
   }
