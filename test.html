@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Screen Sharing Example</title>
+  </head>
+  <body>
+    <h1>Screen Sharing Example</h1>
+    <button id="startButton">Start Screen Sharing</button>
+    <video
+      id="screenVideo"
+      autoplay
+      playsinline
+      style="max-width: 100%"
+    ></video>
+    <canvas
+      id="selectionCanvas"
+      style="position: absolute; top: 0; left: 0; pointer-events: none"
+    ></canvas>
+
+    <script>
+      const startButton = document.getElementById("startButton");
+      const screenVideo = document.getElementById("screenVideo");
+      const selectionCanvas = document.getElementById("selectionCanvas");
+      const ctx = selectionCanvas.getContext("2d");
+      let isSelecting = false;
+      let selectionStartX, selectionStartY;
+
+      startButton.addEventListener("click", async () => {
+        try {
+          const stream = await navigator.mediaDevices.getDisplayMedia({
+            video: true,
+          });
+          console.log({ stream });
+
+          // Display the stream in the video element
+          screenVideo.srcObject = stream;
+        } catch (error) {
+          console.error("Error accessing screen sharing:", error);
+        }
+      });
+
+      screenVideo.addEventListener("mousedown", (e) => {
+        isSelecting = true;
+        selectionStartX = e.clientX;
+        selectionStartY = e.clientY;
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (isSelecting) {
+          const selectionWidth = e.clientX - selectionStartX;
+          const selectionHeight = e.clientY - selectionStartY;
+
+          selectionCanvas.width = window.innerWidth;
+          selectionCanvas.height = window.innerHeight;
+
+          ctx.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
+          ctx.fillStyle = "rgba(0, 0, 0, 0.3)"; // Add a background color
+          ctx.fillRect(0, 0, selectionCanvas.width, selectionCanvas.height);
+          ctx.strokeStyle = "red";
+          ctx.lineWidth = 2;
+          ctx.strokeRect(
+            selectionStartX,
+            selectionStartY,
+            selectionWidth,
+            selectionHeight
+          );
+        }
+      });
+
+      window.addEventListener("mouseup", (e) => {
+        if (isSelecting) {
+          isSelecting = false;
+          const selectionWidth = e.clientX - selectionStartX;
+          const selectionHeight = e.clientY - selectionStartY;
+
+          console.log("Selection Dimensions:", {
+            x: selectionStartX,
+            y: selectionStartY,
+            width: selectionWidth,
+            height: selectionHeight,
+          });
+
+          ctx.clearRect(0, 0, selectionCanvas.width, selectionCanvas.height);
+        }
+      });
+    </script>
+  </body>
+</html>
