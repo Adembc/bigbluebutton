@@ -115,19 +115,21 @@ class ScreenshareComponent extends React.Component {
   }
 
   componentDidMount() {
-    const {
-      isLayoutSwapped,
-      layoutContextDispatch,
-      intl,
-      isPresenter,
-      isSharedNotesPinned,
-    } = this.props;
-    // this.setState({ showPopup: true });
+    // const {
+    //   isLayoutSwapped,
+    //   layoutContextDispatch,
+    //   intl,
+    //   isPresenter,
+    //   isSharedNotesPinned,
+    // } = this.props;
   }
 
   componentDidUpdate(prevProps) {
-    const { isPresenter, showPopup } = this.props;
-    if (!showPopup) {
+    const { isPresenter } = this.props;
+    const { showPopup: prevShowPopup } = prevState;
+    const { showPopup } = this.state;
+
+    if (prevShowPopup && !showPopup && isPresenter) {
       //this should be blocked until the popup closed
       screenshareHasStarted(isPresenter);
       // Autoplay failure handling
@@ -577,7 +579,7 @@ class ScreenshareComponent extends React.Component {
     };
 
     const popupContentStyle = {
-      backgroundColor: "white",
+      backgroundColor: "black",
       padding: "20px",
       borderRadius: "5px",
       boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
@@ -586,9 +588,7 @@ class ScreenshareComponent extends React.Component {
     return (
       <div style={popupOverlayStyle}>
         <div style={popupContentStyle}>popup select screeen</div>
-        <button onClick={() => this.setState({ showPopup: false })}>
-          close
-        </button>
+        <button>test</button>
       </div>
     );
   }
