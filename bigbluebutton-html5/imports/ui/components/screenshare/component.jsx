@@ -587,7 +587,9 @@ class ScreenshareComponent extends React.Component {
     return (
       <div style={popupOverlayStyle}>
         <div style={popupContentStyle}>popup select screeen</div>
-        <button>test</button>
+        <button onClick={() => this.setState({ showPopup: false })}>
+          test
+        </button>
       </div>
     );
   }
