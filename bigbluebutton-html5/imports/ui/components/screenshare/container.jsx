@@ -29,20 +29,21 @@ const ScreenshareContainer = (props) => {
   const currentUser = users[Auth.meetingID][Auth.userID];
   const isPresenter = currentUser.presenter;
 
-  if (isVideoBroadcasting()) {
+  if (isVideoBroadcasting() && !isPresenter) {
     return (
-      <Overlay isOpen={true} />
-      // <ScreenshareComponent
-      //   {...{
-      //     layoutContextDispatch,
-      //     ...props,
-      //     ...screenShare,
-      //     fullscreenContext,
-      //     fullscreenElementId,
-      //     isPresenter,
-      //   }}
-      // />
+      <ScreenshareComponent
+        {...{
+          layoutContextDispatch,
+          ...props,
+          ...screenShare,
+          fullscreenContext,
+          fullscreenElementId,
+          isPresenter,
+        }}
+      />
     );
+  } else if (isVideoBroadcasting() && isPresenter) {
+    return <Overlay isOpen={true}></Overlay>;
   }
   return null;
 };
