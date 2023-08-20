@@ -115,13 +115,10 @@ class ScreenshareComponent extends React.Component {
   }
 
   componentDidMount() {
-    // const {
-    //   isLayoutSwapped,
-    //   layoutContextDispatch,
-    //   intl,
-    //   isPresenter,
-    //   isSharedNotesPinned,
-    // } = this.props;
+    // Stream health state tracker to propagate UI changes on reconnections
+    subscribeToStreamStateChange("screenshare", this.onStreamStateChange);
+    // Attaches the local stream if it exists to serve as the local presenter preview
+    attachLocalPreviewStream(getMediaElement());
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -144,10 +141,6 @@ class ScreenshareComponent extends React.Component {
         "screensharePlayFailed",
         this.handlePlayElementFailed
       );
-      // Stream health state tracker to propagate UI changes on reconnections
-      subscribeToStreamStateChange("screenshare", this.onStreamStateChange);
-      // Attaches the local stream if it exists to serve as the local presenter preview
-      attachLocalPreviewStream(getMediaElement());
 
       notify(
         intl.formatMessage(intlMessages.screenshareStarted),
