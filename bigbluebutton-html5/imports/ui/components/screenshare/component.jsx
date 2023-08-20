@@ -622,6 +622,7 @@ class ScreenshareComponent extends React.Component {
     // 2 - The user is a presenter and the stream wasn't globally broadcasted yet
     // 3 - The media was loaded, the stream was globally broadcasted BUT the stream
     // state transitioned to an unhealthy stream. tl;dr: screen sharing reconnection
+    console.log({ loaded, isPresenter, isGloballyBroadcasting, mediaFlowing });
     const shouldRenderConnectingState =
       !loaded ||
       (isPresenter && !isGloballyBroadcasting) ||
