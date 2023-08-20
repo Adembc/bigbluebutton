@@ -503,7 +503,7 @@ class ScreenshareComponent extends React.Component {
   renderScreensharePresenter() {
     const { switched, showPopup } = this.state;
     const { isGloballyBroadcasting, intl } = this.props;
-
+    console.log({ showPopup });
     return (
       <Styled.ScreenshareContainer
         switched={switched}
@@ -570,11 +570,11 @@ class ScreenshareComponent extends React.Component {
       display: "flex",
       justifyContent: "center",
       alignItems: "center",
-      zIndex: 1000 /* Adjust the z-index as needed */,
+      zIndex: 10000000 /* Adjust the z-index as needed */,
     };
 
     const popupContentStyle = {
-      backgroundColor: "white",
+      backgroundColor: "black",
       padding: "20px",
       borderRadius: "5px",
       boxShadow: "0 0 10px rgba(0, 0, 0, 0.3)",
