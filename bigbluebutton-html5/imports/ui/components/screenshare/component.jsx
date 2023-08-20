@@ -128,7 +128,7 @@ class ScreenshareComponent extends React.Component {
     const { isPresenter } = this.props;
     // const { showPopup: prevShowPopup } = prevProps;
     const { showPopup } = this.state;
-    if (prevProps.showPopup && !showPopup && isPresenter) {
+    if (prevProps.showPopup && !showPopup) {
       console.log("should be sharing now");
       //this should be blocked until the popup closed
       screenshareHasStarted(isPresenter);
@@ -521,7 +521,7 @@ class ScreenshareComponent extends React.Component {
         {isGloballyBroadcasting && this.renderSwitchButton()}
         {this.renderVideo(switched)}
 
-        {/* {isGloballyBroadcasting ? (
+        {isGloballyBroadcasting ? (
           <div data-test="isSharingScreen">
             {!switched &&
               ScreenshareComponent.renderScreenshareContainerInside(
@@ -532,7 +532,7 @@ class ScreenshareComponent extends React.Component {
           ScreenshareComponent.renderScreenshareContainerInside(
             intl.formatMessage(intlMessages.presenterLoadingLabel)
           )
-        )} */}
+        )}
       </Styled.ScreenshareContainer>
     );
   }
